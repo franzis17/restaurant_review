@@ -1,7 +1,12 @@
+/**
+ * Contains the code for: express app, initial API routes,
+ */
+
 import express from "express";
 import cors from "cors";
 import restaurants from "./api/restaurants.route.js";
 
+// Create express *app* to be used for
 const app = express();
 
 app.use(cors());

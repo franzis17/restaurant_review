@@ -19,6 +19,7 @@ MongoClient.connect(process.env.RESTREVIEWS_DB_URI)
     // Get a reference to the MongoDB collection "restaurants"
     await RestaurantsDAO.injectDB(client);
 
+    // Start the server
     app.listen(port, () => {
       console.log(`listening on port ${port}`);
     });
