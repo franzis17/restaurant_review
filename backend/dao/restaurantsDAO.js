@@ -5,7 +5,8 @@
  * - Handles DB queries, and communication with DB directly
  * - Used by Controllers to perform DB operations
  */
-
+import mongodb from "mongodb";
+const ObjectId = mongodb.ObjectId;
 let restaurants; // References to the database
 
 export default class RestaurantsDAO {
@@ -80,6 +81,69 @@ export default class RestaurantsDAO {
         `Unable to convert cursor to array or problem counting documents: ${e}`
       );
       return { restaurantsList: [], totalNumRestaurants: 0 };
+    }
+  }
+
+  /**
+   * Search a restaurant given an inputted id AND get all reviews of that restaurant
+   */
+  static async getRestaurantById(id) {
+    try {
+      const pipeline = [
+        // 1st stage: Find a restaurant given the id
+        {
+          $match: {
+            _id: new ObjectId(id),
+          },
+        },
+        // 2nd stage: GET ALL reviews of the restaurant that was found
+        {
+          $lookup: {
+            from: "reviews",
+            let: {
+              id: "$_id",
+            },
+            pipeline: [
+              // Find all the reviews that MATCH the restaurant_id
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$restaurant_id", "$$id"],
+                  },
+                },
+              },
+              // Sort by date
+              {
+                $sort: {
+                  date: -1,
+                },
+              },
+            ],
+            as: "reviews",
+          },
+        },
+        {
+          $addFields: {
+            reviews: "$reviews",
+          },
+        },
+      ];
+      // Aggregate the pipeline / Collect everything together
+      return await restaurants.aggregate(pipeline).next();
+    } catch (e) {
+      console.error(`Something went wrong in getRestaurantById: ${e}`);
+      throw e;
+    }
+  }
+
+  static async getCuisines() {
+    let cuisines = [];
+    try {
+      cuisines = await restaurants.distinct("cuisine");
+      return cuisines;
+    } catch (e) {
+      console.error(`Unable to get cuisines, ${e}`);
+      return cuisines;
     }
   }
 }

@@ -10,12 +10,12 @@ import ReviewsCtrl from "./reviews.controller.js";
 
 const router = express.Router();
 
-// GET
+// *Restaurant* routes
 router.route("/").get(RestaurantsCtrl.apiGetRestaurants);
+router.route("/id/:id").get(RestaurantsCtrl.apiGetRestaurantById);
+router.route("/cuisines").get(RestaurantsCtrl.apiGetRestaurantCuisines);
 
-// POST - Create a new review
-// PUT - Edit a review
-// DELETE - Delete a review
+// *Review* routes containing POST + PUT + DELETE
 router
   .route("/review")
   .post(ReviewsCtrl.apiPostReview)
