@@ -2,10 +2,10 @@ import React from "react";
 import {Routes, Route, Link} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import AddReview from "./components/add-review.js";
-import Login from "./components/login.js";
-import RestaurantsList from "./components/restaurants-list.js";
-import Restaurant from "./components/restaurant.js";
+import AddReview from "./components/add-review";
+import Login from "./components/login";
+import RestaurantsList from "./components/restaurants-list";
+import Restaurant from "./components/restaurant";
 
 function App() {
   const [user, setUser] = React.useState(null);
@@ -30,40 +30,38 @@ function App() {
               Restaurants
             </Link>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" >
             { user ? (
-              <a onClick={logout} className="nav-link" style={{cursor: 'pointer'}}> 
+              <button onClick={logout} className="nav-link" style={{cursor:'pointer'}}>
                 Logout {user.name}
-              </a>
-            ) : (
-              <Link to={"/login"} className="nav-link">
-                Login
-              </Link>
+              </button>
+            ) : (            
+            <Link to={"/login"} className="nav-link">
+              Login
+            </Link>
             )}
+
           </li>
         </div>
       </nav>
 
       <div className="container mt-3">
         <Routes>
-          {/* Route for restaurants list */}
-          <Route exact path="/" component={RestaurantsList} />
-          {/* Route for add review for a specific restaurant */}
-          <Route
+          <Route path="/" element={<RestaurantsList/>} />
+          <Route path="/restaurants" element={<RestaurantsList/>} />
+          <Route 
             path="/restaurants/:id/review"
             render={(props) => (
               <AddReview {...props} user={user} />
             )}
           />
-          {/* Route for Finding a specific restaurant */}
-          <Route
+          <Route 
             path="/restaurants/:id"
             render={(props) => (
               <Restaurant {...props} user={user} />
             )}
           />
-          {/* Route for user login */}
-          <Route
+          <Route 
             path="/login"
             render={(props) => (
               <Login {...props} login={login} />
