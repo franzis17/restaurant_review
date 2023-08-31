@@ -12,7 +12,7 @@ class RestaurantDataService {
    */
   getAll(page = 0) {
     // Note: the string below is a URL added in the end of `baseURL` inside "http-common.js"
-    return http.get(`?page=${page}`);  
+    return http.get(`?page=${page}`);
   }
   
   /**

@@ -90,44 +90,40 @@ export default class RestaurantsDAO {
   static async getRestaurantById(id) {
     try {
       const pipeline = [
-        // 1st stage: Find a restaurant given the id
         {
-          $match: {
-            _id: new ObjectId(id),
-          },
-        },
-        // 2nd stage: GET ALL reviews of the restaurant that was found
-        {
-          $lookup: {
-            from: "reviews",
-            let: {
-              id: "$_id",
+            $match: {
+                _id: new ObjectId(id),
             },
-            pipeline: [
-              // Find all the reviews that MATCH the restaurant_id
+        },
               {
-                $match: {
-                  $expr: {
-                    $eq: ["$restaurant_id", "$$id"],
+                  $lookup: {
+                      from: "reviews",
+                      let: {
+                          id: "$_id",
+                      },
+                      pipeline: [
+                          {
+                              $match: {
+                                  $expr: {
+                                      $eq: ["$restaurant_id", "$$id"],
+                                  },
+                              },
+                          },
+                          {
+                              $sort: {
+                                  date: -1,
+                              },
+                          },
+                      ],
+                      as: "reviews",
                   },
-                },
               },
-              // Sort by date
               {
-                $sort: {
-                  date: -1,
-                },
+                  $addFields: {
+                      reviews: "$reviews",
+                  },
               },
-            ],
-            as: "reviews",
-          },
-        },
-        {
-          $addFields: {
-            reviews: "$reviews",
-          },
-        },
-      ];
+      ]
       // Aggregate the pipeline / Collect everything together
       return await restaurants.aggregate(pipeline).next();
     } catch (e) {

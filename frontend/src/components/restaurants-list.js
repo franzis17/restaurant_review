@@ -17,7 +17,7 @@ const RestaurantsList = (props) => {
     retrieveCuisines();     // After rendering, retrieveCuisines
   }, []);
   
-  // -- Allow people to search by name, zipcode, or cuisine --
+  // -- Change search variables by name, zipcode, or cuisine --
   
   const onChangeSearchName = e => {
     const searchName = e.target.value;
@@ -167,17 +167,16 @@ const RestaurantsList = (props) => {
                     <strong>Address: </strong>{address}
                   </p>
                   <div className="row">
-                  <Link to={"/restaurants/"+restaurant._id} className="btn btn-primary col-lg-5 mx-1 mb-1">
-                    View Reviews
-                  </Link>
-                  <a target="_blank" rel="noreferrer" href={"https://www.google.com/maps/place/" + address} className="btn btn-primary col-lg-5 mx-1 mb-1">View Map</a>
+                    <Link to={"/restaurants/"+restaurant._id} className="btn btn-primary col-lg-5 mx-1 mb-1">
+                      View Reviews
+                    </Link>
+                    <a target="_blank" rel="noreferrer" href={"https://www.google.com/maps/place/" + address} className="btn btn-primary col-lg-5 mx-1 mb-1">View Map</a>
                   </div>
                 </div>
               </div>
             </div>
           );
         })}
-
 
       </div>
     </div>
